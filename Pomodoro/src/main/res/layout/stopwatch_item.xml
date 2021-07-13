@@ -40,7 +40,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             app:custom_color="@color/purple_500"
-            app:custom_style="stroke"
+            app:custom_style="fill"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/start_pause_button"
             app:layout_constraintHorizontal_bias="0.421"

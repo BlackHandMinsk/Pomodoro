@@ -2,11 +2,7 @@ package com.example.stopwatch
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.View
-import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.pomodoro.circletimer.CircleTimer
 import com.example.pomodoro.databinding.ActivityMainBinding
 import com.example.pomodoro.stopwatch.Stopwatch
 import com.example.pomodoro.stopwatch.StopwatchAdapter
@@ -36,7 +32,7 @@ class MainActivity : AppCompatActivity(), StopwatchListener {
 
         binding.addNewStopwatchButton.setOnClickListener {
             startTime = binding.inputTime.text.toString().toInt()
-            stopwatches.add(Stopwatch(nextId++, startTime.toLong()*60000, false))
+            stopwatches.add(Stopwatch(nextId++, startTime.toLong()*60000, startTime.toLong()*60000,false))
             stopwatchAdapter.submitList(stopwatches.toList())
         }
 
@@ -44,11 +40,11 @@ class MainActivity : AppCompatActivity(), StopwatchListener {
     }
 
     override fun start(id: Int) {
-        changeStopwatch(id, null, true)
+        changeStopwatch(id, null, null,true)
     }
 
-    override fun stop(id: Int, currentMs: Long) {
-        changeStopwatch(id, currentMs, false)
+    override fun stop(id: Int, currentMs: Long, timerStartTime: Long) {
+        changeStopwatch(id, currentMs, timerStartTime,false)
     }
 
 
@@ -57,11 +53,11 @@ class MainActivity : AppCompatActivity(), StopwatchListener {
         stopwatchAdapter.submitList(stopwatches.toList())
     }
 
-    private fun changeStopwatch(id: Int, currentMs: Long?, isStarted: Boolean) {
+    private fun changeStopwatch(id: Int, currentMs: Long?, timerStartTime: Long?, isStarted: Boolean) {
         val newTimers = mutableListOf<Stopwatch>()
         stopwatches.forEach {
             if (it.id == id) {
-                newTimers.add(Stopwatch(it.id, currentMs ?: it.currentMs, isStarted))
+                newTimers.add(Stopwatch(it.id, currentMs ?: it.currentMs,it.timerStartTime,isStarted))
             } else {
                 newTimers.add(it)
             }
