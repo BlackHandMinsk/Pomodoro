@@ -96,7 +96,6 @@ class ForegroundService : Service() {
     }
 
     private fun getCountDownTimer(startTime: Long) {
-
         timer = object :CountDownTimer(startTime, UNIT_TEN_MS){
             override fun onTick(millisUntilFinished: Long) {
                 mil = millisUntilFinished

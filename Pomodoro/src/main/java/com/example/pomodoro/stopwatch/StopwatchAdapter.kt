@@ -15,14 +15,16 @@ class StopwatchAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StopwatchViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = StopwatchItemBinding.inflate(layoutInflater, parent, false)
-        return StopwatchViewHolder(binding, listener, binding.root.context.resources)
+        val holder = StopwatchViewHolder(binding, listener, binding.root.context.resources)
+        holder.setIsRecyclable(false)
+        return holder
+        //StopwatchViewHolder(binding, listener, binding.root.context.resources)
     }
 
     override fun onBindViewHolder(holder: StopwatchViewHolder, position: Int) {
         holder.bind(getItem(position))
 
     }
-
 
     private companion object {
 

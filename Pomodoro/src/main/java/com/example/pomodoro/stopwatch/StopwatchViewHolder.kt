@@ -12,9 +12,7 @@ import com.example.pomodoro.UNIT_TEN_MS
 import com.example.pomodoro.databinding.StopwatchItemBinding
 import com.example.pomodoro.displayTime
 import com.example.stopwatch.MainActivity
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class StopwatchViewHolder(
     private val binding: StopwatchItemBinding,
@@ -63,9 +61,7 @@ class StopwatchViewHolder(
         binding.startPauseButton.text = "STOP"
         timer?.cancel()
         timer = getCountDownTimer(stopwatch)
-
         timer?.start()
-
         binding.blinkingIndicator.isInvisible = false
         (binding.blinkingIndicator.background as? AnimationDrawable)?.start()
     }
