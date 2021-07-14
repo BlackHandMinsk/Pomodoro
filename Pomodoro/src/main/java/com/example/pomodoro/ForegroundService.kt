@@ -58,7 +58,6 @@ class ForegroundService : Service() {
         when (intent?.extras?.getString(COMMAND_ID) ?: INVALID) {
             COMMAND_START -> {
                 val startTime = intent?.extras?.getLong(STARTED_TIMER_TIME_MS) ?: return
-                println("process"+startTime)
                 commandStart(startTime)
             }
             COMMAND_STOP -> commandStop()
@@ -82,7 +81,6 @@ class ForegroundService : Service() {
 
     private fun continueTimer(startTime: Long) {
         getCountDownTimer(startTime)
-        println("starttime"+ startTime)
         job = GlobalScope.launch(Dispatchers.Main) {
             while (true) {
                 notificationManager?.notify(
@@ -101,7 +99,6 @@ class ForegroundService : Service() {
 
         timer = object :CountDownTimer(startTime, UNIT_TEN_MS){
             override fun onTick(millisUntilFinished: Long) {
-                println("mil"+mil)
                 mil = millisUntilFinished
             }
 

@@ -10,6 +10,8 @@ class StopwatchAdapter(
     private val listener: StopwatchListener
 ) : ListAdapter<Stopwatch, StopwatchViewHolder>(itemComparator) {
 
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StopwatchViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = StopwatchItemBinding.inflate(layoutInflater, parent, false)
@@ -20,6 +22,7 @@ class StopwatchAdapter(
         holder.bind(getItem(position))
 
     }
+
 
     private companion object {
 
