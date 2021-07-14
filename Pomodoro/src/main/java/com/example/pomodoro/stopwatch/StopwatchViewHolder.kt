@@ -82,8 +82,8 @@ class StopwatchViewHolder(
 
 
             override fun onTick(millisUntilFinished: Long) {
-
                 println(stopwatch.currentMs)
+
                 stopwatch.currentMs = millisUntilFinished
                // binding.stopwatchTimer.text = stopwatch.currentMs.displayTime()
                 binding.circleTimer.setCurrent(millisUntilFinished)
