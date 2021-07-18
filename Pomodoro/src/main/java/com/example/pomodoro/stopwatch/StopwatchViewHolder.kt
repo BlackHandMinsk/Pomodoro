@@ -30,6 +30,7 @@ class StopwatchViewHolder(
 
 
     fun bind(stopwatch: Stopwatch) {
+
         binding.stopwatchTimer.text = stopwatch.currentMs.displayTime()
         period = stopwatch.currentMs
     //    timerStartTime = stopwatch.currentMs
@@ -42,9 +43,9 @@ class StopwatchViewHolder(
 
 
         if (stopwatch.isStarted) {
-                startTimer(stopwatch)
+            startTimer(stopwatch)
         } else {
-            stopTimer(stopwatch)
+           stopTimer(stopwatch)
         }
 
         initButtonsListeners(stopwatch)
@@ -68,13 +69,6 @@ class StopwatchViewHolder(
         binding.itemBackground.setBackgroundColor(Color.WHITE)
         binding.startPauseButton.text = "STOP"
         timer?.cancel()
-
-
-//        CoroutineScope(Dispatchers.Main).launch {
-//            timer = getCountDownTimer(stopwatch)
-//            timer?.start()
-//         }
-
         timer = getCountDownTimer(stopwatch)
         timer?.start()
         binding.blinkingIndicator.isInvisible = false
@@ -93,7 +87,7 @@ class StopwatchViewHolder(
 
 
             override fun onTick(millisUntilFinished: Long) {
-                println(stopwatch.currentMs)
+                println("time"+stopwatch.id+" "+stopwatch.currentMs)
                 stopwatch.currentMs = millisUntilFinished
                // binding.stopwatchTimer.text = stopwatch.currentMs.displayTime()
                 binding.circleTimer.setCurrent(millisUntilFinished)

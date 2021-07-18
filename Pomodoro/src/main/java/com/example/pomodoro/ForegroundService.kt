@@ -86,8 +86,8 @@ class ForegroundService : Service() {
                 notificationManager?.notify(
                     NOTIFICATION_ID,
                     getNotification(
-                       // (startTime.displayTime())
                         (mil.displayTime())
+                       // (mil.displayTime())
                     )
                 )
                 delay(INTERVAL)
@@ -134,7 +134,7 @@ class ForegroundService : Service() {
 
     private fun startForegroundAndShowNotification() {
         createChannel()
-        val notification = getNotification("content")
+        val notification = getNotification("НЕТ ЗАПУЩЕННЫХ ТАЙМЕРОВ")
         startForeground(NOTIFICATION_ID, notification)
     }
 

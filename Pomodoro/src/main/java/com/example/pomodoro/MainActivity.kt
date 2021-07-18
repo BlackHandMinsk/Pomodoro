@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.os.CountDownTimer
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -13,10 +13,8 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foregroundservice.ForegroundService
-import com.example.pomodoro.COMMAND_ID
-import com.example.pomodoro.COMMAND_START
-import com.example.pomodoro.COMMAND_STOP
-import com.example.pomodoro.STARTED_TIMER_TIME_MS
+import com.example.pomodoro.*
+import com.example.pomodoro.circletimer.CircleTimer
 import com.example.pomodoro.databinding.ActivityMainBinding
 import com.example.pomodoro.stopwatch.Stopwatch
 import com.example.pomodoro.stopwatch.StopwatchAdapter
@@ -26,7 +24,7 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val stopwatchAdapter = StopwatchAdapter(this)
+    private val stopwatchAdapter = StopwatchAdapter(this,0)
     private val stopwatches = mutableListOf<Stopwatch>()
     private var nextId = 0
     private var startTime:Long = 0L
@@ -36,7 +34,7 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
         super.onCreate(savedInstanceState)
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
-       // stopwatchAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY //TODO пересмотреть
+     //   stopwatchAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY //TODO пересмотреть
         setContentView(binding.root)
 
         binding.recycler.apply {
@@ -50,22 +48,8 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
             stopwatches.add(Stopwatch(nextId++, startTime.toLong()*60000, startTime.toLong()*60000,false))
             stopwatchAdapter.submitList(stopwatches.toList())
         }
-//        binding.addNewStopwatchButton.setOnClickListener {
-//            startTime = binding.inputTime.text.toString().toLong()
-//            stopwatches.add(
-//                Stopwatch(
-//                    nextId++,
-//                    startTime.toLong() * 60000,
-//                    startTime.toLong() * 60000,
-//                    false
-//                )
-//            )
-//            stopwatchAdapter.submitList(stopwatches.toList())
-////        }
-//        }
     }
 
-   
 
 
 
