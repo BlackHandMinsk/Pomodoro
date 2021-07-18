@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -35,25 +36,33 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
         super.onCreate(savedInstanceState)
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        stopwatchAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW //TODO пересмотреть
+       // stopwatchAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY //TODO пересмотреть
         setContentView(binding.root)
 
         binding.recycler.apply {
             layoutManager = LinearLayoutManager(context)
+          //  adapter.notifyItemChanged()
             adapter = stopwatchAdapter
-          //  stopwatchAdapter.stateRestorationPolicy
         }
-
-
-
 
         binding.addNewStopwatchButton.setOnClickListener {
             startTime = binding.inputTime.text.toString().toLong()
             stopwatches.add(Stopwatch(nextId++, startTime.toLong()*60000, startTime.toLong()*60000,false))
             stopwatchAdapter.submitList(stopwatches.toList())
         }
-
-
+//        binding.addNewStopwatchButton.setOnClickListener {
+//            startTime = binding.inputTime.text.toString().toLong()
+//            stopwatches.add(
+//                Stopwatch(
+//                    nextId++,
+//                    startTime.toLong() * 60000,
+//                    startTime.toLong() * 60000,
+//                    false
+//                )
+//            )
+//            stopwatchAdapter.submitList(stopwatches.toList())
+////        }
+//        }
     }
 
    
@@ -63,21 +72,26 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun start(id: Int) {
       //  changeStopwatch(id, null, null,true)
-        val startedWatches = arrayListOf<Int>()
-       var c = 0
-        stopwatches.forEach{
-            if(it.isStarted){
-               startedWatches.add(c)
-                c++
-            }else{
-                c++
+            val startedWatches = arrayListOf<Int>()
+            var c = 0
+            stopwatches.forEach {
+                if (it.isStarted) {
+                    startedWatches.add(c)
+                    c++
+                } else {
+                    c++
+                }
             }
-        }
 
-        startedWatches.forEach {
-            changeStopwatch( stopwatches[it].id, stopwatches[it].currentMs, stopwatches[it].timerStartTime,false)
-        }
-        changeStopwatch(id, null, null,true)
+            startedWatches.forEach {
+                changeStopwatch(
+                    stopwatches[it].id,
+                    stopwatches[it].currentMs,
+                    stopwatches[it].timerStartTime,
+                    false
+                )
+            }
+            changeStopwatch(id, null, null, true)
     }
 
     override fun stop(id: Int, currentMs: Long, timerStartTime: Long) {
@@ -103,6 +117,9 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
         stopwatches.clear()
         stopwatches.addAll(newTimers)
     }
+
+
+
 
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)

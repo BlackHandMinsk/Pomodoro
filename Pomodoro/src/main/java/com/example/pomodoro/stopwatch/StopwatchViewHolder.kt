@@ -19,28 +19,36 @@ class StopwatchViewHolder(
     private val listener: StopwatchListener,
     private val resources: Resources,
     private var period:Long = 0,
+    private var circleTimerPeriod:Long = 0
     //private var timerStartTime:Long = 0
 
 
-) : RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root){
     private var timer: CountDownTimer? = null
+
+
+
 
     fun bind(stopwatch: Stopwatch) {
         binding.stopwatchTimer.text = stopwatch.currentMs.displayTime()
         period = stopwatch.currentMs
     //    timerStartTime = stopwatch.currentMs
-        binding.circleTimer.setPeriod(stopwatch.currentMs)
+        binding.circleTimer.setPeriod(0)
+        binding.circleTimer.setPeriod(stopwatch.timerStartTime)
+        binding.circleTimer.setCurrent(0)
+        binding.circleTimer.setCurrent(stopwatch.currentMs)
+
+
 
 
         if (stopwatch.isStarted) {
-            startTimer(stopwatch)
+                startTimer(stopwatch)
         } else {
             stopTimer(stopwatch)
         }
 
         initButtonsListeners(stopwatch)
     }
-
 
 
 
@@ -60,6 +68,13 @@ class StopwatchViewHolder(
         binding.itemBackground.setBackgroundColor(Color.WHITE)
         binding.startPauseButton.text = "STOP"
         timer?.cancel()
+
+
+//        CoroutineScope(Dispatchers.Main).launch {
+//            timer = getCountDownTimer(stopwatch)
+//            timer?.start()
+//         }
+
         timer = getCountDownTimer(stopwatch)
         timer?.start()
         binding.blinkingIndicator.isInvisible = false
@@ -79,7 +94,6 @@ class StopwatchViewHolder(
 
             override fun onTick(millisUntilFinished: Long) {
                 println(stopwatch.currentMs)
-
                 stopwatch.currentMs = millisUntilFinished
                // binding.stopwatchTimer.text = stopwatch.currentMs.displayTime()
                 binding.circleTimer.setCurrent(millisUntilFinished)

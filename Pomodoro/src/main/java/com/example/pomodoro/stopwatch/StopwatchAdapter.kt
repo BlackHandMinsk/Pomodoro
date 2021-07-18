@@ -1,30 +1,34 @@
 package com.example.pomodoro.stopwatch
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.example.pomodoro.databinding.StopwatchItemBinding
 
 class StopwatchAdapter(
-    private val listener: StopwatchListener
+    private val listener: StopwatchListener,
 ) : ListAdapter<Stopwatch, StopwatchViewHolder>(itemComparator) {
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StopwatchViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = StopwatchItemBinding.inflate(layoutInflater, parent, false)
-        val holder = StopwatchViewHolder(binding, listener, binding.root.context.resources)
-        holder.setIsRecyclable(false)
-        return holder
-        //StopwatchViewHolder(binding, listener, binding.root.context.resources)
+        return StopwatchViewHolder(binding, listener, binding.root.context.resources)
     }
+
+
 
     override fun onBindViewHolder(holder: StopwatchViewHolder, position: Int) {
         holder.bind(getItem(position))
 
     }
+
+
 
     private companion object {
 
