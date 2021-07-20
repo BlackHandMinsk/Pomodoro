@@ -7,10 +7,8 @@ import android.os.CountDownTimer
 import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pomodoro.START_TIME
-import com.example.pomodoro.UNIT_TEN_MS
+import com.example.pomodoro.*
 import com.example.pomodoro.databinding.StopwatchItemBinding
-import com.example.pomodoro.displayTime
 import com.example.stopwatch.MainActivity
 import kotlinx.coroutines.*
 
@@ -18,36 +16,41 @@ class StopwatchViewHolder(
     private val binding: StopwatchItemBinding,
     private val listener: StopwatchListener,
     private val resources: Resources,
-    private var period:Long = 0,
-    private var circleTimerPeriod:Long = 0
-    //private var timerStartTime:Long = 0
+
 
 
 ) : RecyclerView.ViewHolder(binding.root){
+
+
     private var timer: CountDownTimer? = null
 
 
 
 
     fun bind(stopwatch: Stopwatch) {
+        binding.stopwatchTimer.text = (stopwatch.currentMsStart-stopwatch.currentMs).displayTime()
 
-        binding.stopwatchTimer.text = stopwatch.currentMs.displayTime()
-        period = stopwatch.currentMs
-    //    timerStartTime = stopwatch.currentMs
-        binding.circleTimer.setPeriod(0)
-        binding.circleTimer.setPeriod(stopwatch.timerStartTime)
-        binding.circleTimer.setCurrent(0)
+        binding.circleTimer.setPeriod(stopwatch.currentMsStart)
         binding.circleTimer.setCurrent(stopwatch.currentMs)
 
 
+        if (stopwatch.isLaunched && stopwatch.currentMs == 0L){
+            binding.itemBackground.setBackgroundColor(Color.RED)
+            binding.deleteButton.setBackgroundColor(Color.RED)
+        } else {
+            binding.itemBackground.setBackgroundColor(Color.TRANSPARENT)
+            binding.deleteButton.setBackgroundColor(Color.TRANSPARENT)
+        }
 
 
         if (stopwatch.isStarted) {
+            binding.startPauseButton.text = "STOP"
             startTimer(stopwatch)
-        } else {
-           stopTimer(stopwatch)
         }
-
+        else {
+            binding.startPauseButton.text = "START"
+            stopTimer()
+        }
         initButtonsListeners(stopwatch)
     }
 
@@ -58,49 +61,56 @@ class StopwatchViewHolder(
             if (stopwatch.isStarted) {
                 listener.stop(stopwatch.id, stopwatch.currentMs,stopwatch.timerStartTime)
             } else {
-                listener.start(stopwatch.id)
+                if (!stopwatch.isLaunched){
+                    stopwatch.timerStartTime = System.currentTimeMillis()
+                } else stopwatch.timerStartTime = System.currentTimeMillis()-stopwatch.currentMs
+                listener.start(stopwatch.id,stopwatch.timerStartTime)
             }
         }
 
-        binding.deleteButton.setOnClickListener { listener.delete(stopwatch.id) }
+        binding.deleteButton.setOnClickListener {
+            binding.circleTimer.setCurrent(0L)
+            timer?.cancel()
+            listener.delete(stopwatch.id) }
     }
 
     private fun startTimer(stopwatch: Stopwatch) {
-        binding.itemBackground.setBackgroundColor(Color.WHITE)
-        binding.startPauseButton.text = "STOP"
+        binding.itemBackground.setBackgroundColor(Color.TRANSPARENT)
+        binding.deleteButton.setBackgroundColor(Color.TRANSPARENT)
         timer?.cancel()
         timer = getCountDownTimer(stopwatch)
         timer?.start()
+
         binding.blinkingIndicator.isInvisible = false
         (binding.blinkingIndicator.background as? AnimationDrawable)?.start()
     }
 
-    private fun stopTimer(stopwatch: Stopwatch) {
-        binding.startPauseButton.text = "START"
+    private fun stopTimer() {
         timer?.cancel()
         binding.blinkingIndicator.isInvisible = true
         (binding.blinkingIndicator.background as? AnimationDrawable)?.stop()
     }
 
     private fun getCountDownTimer(stopwatch: Stopwatch): CountDownTimer {
-        return object : CountDownTimer(stopwatch.currentMs, UNIT_TEN_MS) {
-
+        return object : CountDownTimer(PERIOD, UNIT_TEN_MS) {
 
             override fun onTick(millisUntilFinished: Long) {
-                println("time"+stopwatch.id+" "+stopwatch.currentMs)
-                stopwatch.currentMs = millisUntilFinished
-               // binding.stopwatchTimer.text = stopwatch.currentMs.displayTime()
-                binding.circleTimer.setCurrent(millisUntilFinished)
-                binding.stopwatchTimer.text = millisUntilFinished.displayTime()
+                binding.circleTimer.setPeriod(stopwatch.currentMsStart)
+                binding.circleTimer.setCurrent(stopwatch.currentMs)
+                stopwatch.currentMs = (System.currentTimeMillis()-stopwatch.timerStartTime)
+                binding.stopwatchTimer.text = (stopwatch.currentMsStart-stopwatch.currentMs).displayTime()
+                println("${stopwatch.id} ${stopwatch.currentMs}")
+
+
+                if (stopwatch.currentMs >= stopwatch.currentMsStart) {
+                    stopwatch.currentMs = 0L
+                    stopTimer()
+                    listener.stop(stopwatch.id, stopwatch.currentMs, stopwatch.timerStartTime)
+                }
             }
 
             override fun onFinish() {
-                binding.circleTimer.setCurrent(0)
-                stopwatch.currentMs = stopwatch.timerStartTime
                 binding.stopwatchTimer.text = stopwatch.currentMs.displayTime()
-                binding.startPauseButton.text = "START"
-                binding.itemBackground.setBackgroundColor(Color.RED)
-                binding.blinkingIndicator.isInvisible = true
             }
         }
     }

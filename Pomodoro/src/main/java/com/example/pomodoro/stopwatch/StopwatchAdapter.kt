@@ -13,7 +13,6 @@ import java.sql.Time
 
 class StopwatchAdapter(
     private val listener: StopwatchListener,
-    private var positionOf:Int
 ) : ListAdapter<Stopwatch, StopwatchViewHolder>(itemComparator) {
 
 
@@ -26,29 +25,7 @@ class StopwatchAdapter(
 
 
     override fun onBindViewHolder(holder: StopwatchViewHolder, position: Int) {
-        if (getItem(position).isStarted) {
-            positionOf = position
             holder.bind(getItem(position))
-        }else{
-            holder.bind(getItem(position))
-        }
-    }
-
-
-
-    override fun onViewDetachedFromWindow(holder: StopwatchViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        if (getItem(positionOf).isStarted){
-            println("pos"+positionOf)
-            holder.setIsRecyclable(false)
-        }
-    }
-
-    override fun onViewAttachedToWindow(holder: StopwatchViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        if (!holder.isRecyclable) {
-            holder.setIsRecyclable(true)
-        }
     }
 
 
