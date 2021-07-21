@@ -1,16 +1,20 @@
 package com.example.stopwatch
 
+import android.app.AlertDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.foregroundservice.ForegroundService
-import com.example.pomodoro.*
+import com.example.pomodoro.COMMAND_ID
+import com.example.pomodoro.COMMAND_START
+import com.example.pomodoro.COMMAND_STOP
+import com.example.pomodoro.STARTED_TIMER_TIME_MS
 import com.example.pomodoro.databinding.ActivityMainBinding
 import com.example.pomodoro.stopwatch.Stopwatch
 import com.example.pomodoro.stopwatch.StopwatchAdapter
@@ -124,6 +128,25 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
         stopwatches.addAll(newTimers)
         println("список таймеров после старт $stopwatches")
     }
+
+
+    override fun onBackPressed() {
+        AlertDialog.Builder(this).apply {
+            setTitle("Подтверждение")
+            setMessage("Вы уверены, что хотите выйти из программы?")
+
+            setPositiveButton("Да") { _, _ ->
+                startTimeNotification = 0L
+                super.onBackPressed()
+
+            }
+
+            setNegativeButton("Нет"){_, _ ->
+            }
+            setCancelable(true)
+        }.create().show()
+    }
+
 
 
     private fun checkInput(inputTime: String): Boolean {
