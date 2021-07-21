@@ -23,8 +23,7 @@ class ForegroundService : Service() {
     private var isServiceStarted = false
     private var notificationManager: NotificationManager? = null
     private var job: Job? = null
-    private var timer: CountDownTimer? = null
-    var mil:Long = 0L
+
 
 
     private val builder by lazy {
@@ -71,42 +70,31 @@ class ForegroundService : Service() {
         }
         Log.i("TAG", "commandStart()")
         try {
-            moveToStartedState()
-            startForegroundAndShowNotification()
-            continueTimer(startTime)
+            if (startTime != 0L) {
+                moveToStartedState()
+                startForegroundAndShowNotification()
+                continueTimer(startTime)
+            }
         } finally {
             isServiceStarted = true
         }
     }
 
     private fun continueTimer(startTime: Long) {
-        getCountDownTimer(startTime)
-        job = GlobalScope.launch(Dispatchers.Main) {
-            while (true) {
-                notificationManager?.notify(
-                    NOTIFICATION_ID,
-                    getNotification(
-                        (mil.displayTime())
-                       // (mil.displayTime())
+
+            job = GlobalScope.launch(Dispatchers.Main) {
+                while (true) {
+                    notificationManager?.notify(
+                        NOTIFICATION_ID,
+                        getNotification(
+                            (startTime - System.currentTimeMillis()).displayTime()
+                        )
                     )
-                )
-                delay(INTERVAL)
+                    delay(INTERVAL)
+                }
             }
-        }
     }
 
-    private fun getCountDownTimer(startTime: Long) {
-        timer = object :CountDownTimer(startTime, UNIT_TEN_MS){
-            override fun onTick(millisUntilFinished: Long) {
-                mil = millisUntilFinished
-            }
-
-            override fun onFinish() {
-                TODO("Not yet implemented")
-            }
-        }
-        timer?.start()
-    }
 
     private fun commandStop() {
         if (!isServiceStarted) {

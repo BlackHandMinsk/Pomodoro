@@ -3,6 +3,7 @@ package com.example.stopwatch
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -39,14 +40,21 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
         }
 
         binding.addNewStopwatchButton.setOnClickListener {
-            val input = binding.inputTime.text.toString().toLong() * 60000
-            stopwatches.add(Stopwatch(nextId++,
-                0L,
-                input,
-                false,
-                0L,//0L
-                isLaunched = false))
-            stopwatchAdapter.submitList(stopwatches.toList())
+            if (checkInput(binding.inputTime.text.toString())) {
+                stopwatches.add(
+                    Stopwatch(
+                        nextId++,
+                        0L,
+                        binding.inputTime.text.toString().toLong() * 60000,
+                        false,
+                        0L,//0L
+                        isLaunched = false
+                    )
+                )
+                stopwatchAdapter.submitList(stopwatches.toList())
+            }else{
+                Toast.makeText(this,"INVALID INPUT",Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -118,27 +126,30 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
     }
 
 
+    private fun checkInput(inputTime: String): Boolean {
+        if (inputTime == "") return false
+        if (inputTime.toLong() > 6001) return false
+        if (inputTime.toLong() == 0L) return false
+
+        return true
+    }
 
 
 
-//    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-//    fun onAppBackgrounded() {
-//        var time:Long = 0
-//        stopwatches.forEach{
-//            if(it.isStarted){
-//                time= it.currentMs
-//            }
-//        }
-//        val startIntent = Intent(this, ForegroundService::class.java)
-//        startIntent.putExtra(COMMAND_ID, COMMAND_START)
-//        startIntent.putExtra(STARTED_TIMER_TIME_MS, time)
-//        startService(startIntent)
-//    }
-//
-//    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-//    fun onAppForegrounded() {
-//        val stopIntent = Intent(this, ForegroundService::class.java)
-//        stopIntent.putExtra(COMMAND_ID, COMMAND_STOP)
-//        startService(stopIntent)
-//    }
+
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onAppBackgrounded() {
+        val startIntent = Intent(this, ForegroundService::class.java)
+        startIntent.putExtra(COMMAND_ID, COMMAND_START)
+        startIntent.putExtra(STARTED_TIMER_TIME_MS, startTimeNotification)
+        startService(startIntent)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onAppForegrounded() {
+        val stopIntent = Intent(this, ForegroundService::class.java)
+        stopIntent.putExtra(COMMAND_ID, COMMAND_STOP)
+        startService(stopIntent)
+    }
 }
