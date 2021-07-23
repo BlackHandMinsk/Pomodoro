@@ -29,7 +29,6 @@ class StopwatchViewHolder(
 
     fun bind(stopwatch: Stopwatch) {
         binding.stopwatchTimer.text = (stopwatch.currentMsStart-stopwatch.currentMs).displayTime()
-
         binding.circleTimer.setPeriod(stopwatch.currentMsStart)
         binding.circleTimer.setCurrent(stopwatch.currentMsStart-stopwatch.currentMs)
 
@@ -95,10 +94,6 @@ class StopwatchViewHolder(
         return object : CountDownTimer(PERIOD, UNIT_TEN_MS) {
 
             override fun onTick(millisUntilFinished: Long) {
-//                binding.circleTimer.setPeriod(stopwatch.currentMsStart)
-//                binding.circleTimer.setCurrent(stopwatch.currentMs) // вот так отстает таймер на пару секунд
-                println("cur ms start "+stopwatch.currentMsStart)
-                println("cur ms  "+stopwatch.currentMs)
 
                 stopwatch.currentMs = (System.currentTimeMillis()-stopwatch.timerStartTime)
 
@@ -106,7 +101,7 @@ class StopwatchViewHolder(
                 binding.circleTimer.setCurrent(stopwatch.currentMsStart-stopwatch.currentMs)
 
                 binding.stopwatchTimer.text = (stopwatch.currentMsStart-stopwatch.currentMs).displayTime()
-                println("${stopwatch.id} ${stopwatch.currentMs}")
+
 
 
                 if (stopwatch.currentMs >= stopwatch.currentMsStart) {

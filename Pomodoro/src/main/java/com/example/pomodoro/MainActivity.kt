@@ -77,7 +77,9 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
 
     override fun delete(id: Int) {
         val timerDelete = stopwatches.find { it.id == id }
-        if(timerDelete!!.isStarted) startTimeNotification = 0L
+        if (timerDelete != null) {
+            if(timerDelete.isStarted) startTimeNotification = 0L
+        }
         stopwatches.remove(stopwatches.find { it.id == id })
         stopwatchAdapter.submitList(stopwatches.toList())
     }
@@ -126,7 +128,6 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
         stopwatchAdapter.submitList(newTimers)
         stopwatches.clear()
         stopwatches.addAll(newTimers)
-        println("список таймеров после старт $stopwatches")
     }
 
 
@@ -155,6 +156,12 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
         if (inputTime.toLong() == 0L) return false
 
         return true
+    }
+
+
+    override fun onDestroy() {
+        onAppForegrounded()
+        super.onDestroy()
     }
 
 

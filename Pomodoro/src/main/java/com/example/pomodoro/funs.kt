@@ -7,10 +7,10 @@ package com.example.pomodoro
     val h = this / 1000 / 3600
     val m = this / 1000 % 3600 / 60
     val s = this / 1000 % 60
-    //  val ms = this % 1000 / 10
+
 
     return "${displaySlot(h)}:${displaySlot(m)}:${displaySlot(s)}"
-    // ":${displaySlot(ms)}"
+
 }
 
  fun displaySlot(count: Long): String {
