@@ -1,4 +1,4 @@
-package com.example.stopwatch
+package com.example.pomodoro
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -10,11 +10,6 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.foregroundservice.ForegroundService
-import com.example.pomodoro.COMMAND_ID
-import com.example.pomodoro.COMMAND_START
-import com.example.pomodoro.COMMAND_STOP
-import com.example.pomodoro.STARTED_TIMER_TIME_MS
 import com.example.pomodoro.databinding.ActivityMainBinding
 import com.example.pomodoro.stopwatch.Stopwatch
 import com.example.pomodoro.stopwatch.StopwatchAdapter
@@ -34,12 +29,11 @@ class MainActivity : AppCompatActivity(),LifecycleObserver, StopwatchListener {
         super.onCreate(savedInstanceState)
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
-     //   stopwatchAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY //TODO пересмотреть
+
         setContentView(binding.root)
 
         binding.recycler.apply {
             layoutManager = LinearLayoutManager(context)
-          //  adapter.notifyItemChanged()
             adapter = stopwatchAdapter
         }
 

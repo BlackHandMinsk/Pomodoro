@@ -4,13 +4,10 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.os.CountDownTimer
-import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pomodoro.*
 import com.example.pomodoro.databinding.StopwatchItemBinding
-import com.example.stopwatch.MainActivity
-import kotlinx.coroutines.*
 
 class StopwatchViewHolder(
     private val binding: StopwatchItemBinding,

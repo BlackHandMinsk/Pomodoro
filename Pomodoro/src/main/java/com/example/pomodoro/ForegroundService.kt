@@ -1,20 +1,13 @@
-package com.example.foregroundservice
+package com.example.pomodoro
 
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.media.RingtoneManager
 import android.os.Build
-import android.os.CountDownTimer
 import android.os.IBinder
-import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.view.isInvisible
-import com.example.pomodoro.*
-import com.example.pomodoro.stopwatch.Stopwatch
-import com.example.stopwatch.MainActivity
 import kotlinx.coroutines.*
 
 class ForegroundService : Service() {
@@ -33,7 +26,7 @@ class ForegroundService : Service() {
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(getPendingIntent())
-            .setSilent(false)
+            .setSilent(true)
             .setSmallIcon(R.drawable.ic_baseline_access_alarm_24)
     }
 
